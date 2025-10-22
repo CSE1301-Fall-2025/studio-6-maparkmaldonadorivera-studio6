@@ -1,6 +1,7 @@
 package studio6;
 
 import edu.princeton.cs.introcs.StdDraw;
+import jdk.jfr.consumer.RecordedMethod;
 
 public class RecursiveMethods {
 
@@ -12,12 +13,13 @@ public class RecursiveMethods {
 	 *         ...)
 	 */
 	public static double geometricSum(int n) {
-		
+		if (n == 0){
 			// FIXME compute the geometric sum for the first n terms recursively
 			return 0;
-		
+		} 
+		return Math.pow(0.5, n) + geometricSum(n-1);
 	}
-
+	
 	
 	/**
 	 * @param xCenter                       x-coordinate of the center of the circle
@@ -29,9 +31,18 @@ public class RecursiveMethods {
 	 * @param radiusMinimumDrawingThreshold radius above which drawing should occur
 	 */
 	public static void circlesUponCircles(double xCenter, double yCenter, double radius, double radiusMinimumDrawingThreshold) {
-		
+		if (radius < radiusMinimumDrawingThreshold) {
+			StdDraw.circle(xCenter, yCenter, radius);	
+		} else {
+			StdDraw.circle(xCenter, yCenter, radius);
+			circlesUponCircles(xCenter-radius, yCenter, radius/3, radiusMinimumDrawingThreshold);
+			circlesUponCircles(xCenter+radius, yCenter, radius/3, radiusMinimumDrawingThreshold);
+			circlesUponCircles(xCenter, yCenter-radius, radius/3, radiusMinimumDrawingThreshold);
+			circlesUponCircles(xCenter, yCenter+radius, radius/3, radiusMinimumDrawingThreshold);
+		}
 		// FIXME complete the recursive drawing
 	}
+
 	
 
 	/**
@@ -41,10 +52,23 @@ public class RecursiveMethods {
 	 * @return an array with the same data as the input but it reverse order
 	 */
 	public static int[] toReversed(int[] array) {
-		
+		int [] reversedArray = new int [array.length];
+		if (array.length>0) {
+			return toReversedHelper(array, reversedArray, 0);
+		} else {
 			// FIXME create a helper method that can recursively reverse the given array
 			return new int[0];
-		
+		}
+	}
+	public static int [] toReversedHelper (int [] array, int [] reversedArray, int i) {
+		if (i >= array.length/2) {
+			return reversedArray;
+		} else {
+			int j = array.length - i;
+			reversedArray[i] = array[j];
+			array [i] = reversedArray [j];
+			return toReversedHelper(array, reversedArray, i = i+1);
+		}
 	}
 
 	/**
